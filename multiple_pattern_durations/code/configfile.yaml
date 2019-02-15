@@ -1,0 +1,27 @@
+# Data parameters
+# Patterns size
+xi : 3
+# Maximal patterns length
+winlen : 12
+#Binsize for teh analysis in ms
+binsize : 1
+# Background firing rate in Hz
+rate : 10
+# Length of data
+t_stop : 10
+# Number of spiketrains
+n : 100
+# SPADE parameters
+# PSF parameters
+# Number of surrogates
+n_surr : 5000
+# Significance level
+alpha : 0.05
+# Spectrum
+spectra : ['#', '3d#']
+# PSR parameters
+psr_param : [0,0,0]
+# Statistical correction
+correction : 'fdr'
+# Minimum number of occurrences
+min_occ : 2

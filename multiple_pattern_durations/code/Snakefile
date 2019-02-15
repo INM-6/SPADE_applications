@@ -1,0 +1,66 @@
+configfile:'configfile.yaml'
+
+import numpy as np
+import quantities as pq
+
+# Loading parameters
+xi = config['xi']
+winlen =config['winlen']
+binsize = config['binsize'] * pq.ms
+rate = config['rate'] * pq.Hz
+t_stop = config['t_stop'] * pq.s
+n = config['n']
+alpha = config['alpha']
+spectra = config['spectra']
+
+# Deriving the window lengths to use 
+lengths = list(
+    range(0,(winlen +1) * int(binsize.magnitude), xi * int(
+        binsize.magnitude))) * binsize.units
+winlens = [int(l/binsize)+1 for l in lengths]
+
+# Rule collecting all the outputs    
+rule all:
+    input:
+        expand('../results/{spectrum}/winlen{w}/filtered_patterns.npy', spectrum=spectra, w=winlens) +
+        expand('../results/{spectrum}/winlen{w}/art_data_results.npy', spectrum=spectra, w=winlens) +
+        ['../figures/pval_spectrum.eps',
+        '../figures/pattern_count.eps'] 
+
+# Rule to generate the artificial data
+rule generate_data:
+    input:
+        'configfile.yaml'
+    output:
+        "../data/art_data.npy"
+    shell:
+        "python generate_art_data.py"
+
+# Rule to analyze the data (no filtering applied yet)
+rule analyze_data:
+    input:
+        "../data/art_data.npy"
+    output:
+        '../results/{spectrum}/winlen{w}/art_data_results.npy'
+    shell:
+        "mpirun python spade_analysis.py {wildcards.w} '{wildcards.spectrum}'"
+
+# Rule to filter the data using Pattern Specrum Filtering
+rule filter_results:
+    input:
+        results = '../results/{spectrum}/winlen{w}/art_data_results.npy',
+        scripts = 'filter_results.py'
+    output:
+        '../results/{spectrum}/winlen{w}/filtered_patterns.npy'
+    shell:
+        "python filter_results.py '{wildcards.spectrum}'"
+
+# Rule to produce figure
+rule plot:
+    input:
+        expand('../results/{spectrum}/winlen{w}/filtered_patterns.npy', spectrum=spectra, w=winlens)
+    output:
+        ['../figures/pval_spectrum.eps',
+        '../figures/pattern_count.eps']
+    shell:
+        "python plot_res.py"
