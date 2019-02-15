@@ -1,0 +1,64 @@
+configfile:'configfile.yaml'
+import numpy as np
+# Parameters performance evaluation
+data_idxs = config['data_idxs']    
+min_xi =config['min_xi']
+min_occ = config['min_occ']
+max_xi = config['max_xi']
+max_occ = config['max_occ']
+alphas = config['alphas']
+
+# Rule to collect all results
+rule all:
+    input:
+        ["../data/stp_data{data_idx}.npy".format(data_idx=data_idx) for data_idx in data_idxs] +
+        ["../results/results_data{data_idx}/result_ind.npy".format(data_idx=data_idx) for data_idx in data_idxs] +
+        ["../results/results_data{data_idx}/result_xi{xi}_occ{occ}.npy".format(data_idx=data_idx, xi=xi, occ=occ) for data_idx in data_idxs for xi in range(min_xi, max_xi+1) for occ in range(min_occ, max_occ+1)] +
+        ["../results/results_data{data_idx}/alpha{alpha}result_filtered.npy".format(data_idx=data_idx, alpha=np.round(alpha,2)) for alpha in alphas for data_idx in data_idxs] +
+        ['../figures/FPFN_performance.eps'] 
+      
+# Rule to generate the artificial data
+rule generate_data:
+    input: 'configfile.yaml'
+    output:
+        ["../data/stp_data{data_idx}.npy".format(data_idx=data_idx) for data_idx in data_idxs]
+    shell:
+        "python generate_art_data.py"
+
+# Rule to analyze the data without injected patterns
+rule indep_data:
+    input:
+        "../data/stp_data{data_idx}.npy"
+    output:
+        "../results/results_data{data_idx}/result_ind.npy"
+    shell:
+        "mpirun python spade_analysis.py {wildcards.data_idx} 0 0"
+
+# Rule to analyze the data with injected patterns (no statistical filtering) 
+rule analyze_data:
+    input:
+        "../data/stp_data{data_idx}.npy"
+    output:
+        "../results/results_data{data_idx}/result_xi{xi}_occ{occ}.npy"
+    shell:
+        "mpirun python spade_analysis.py {wildcards.data_idx} {wildcards.xi} {wildcards.occ}"
+
+# Rule to apply the Pattern Spectrum Filter
+rule filter_results:
+    input:
+        ["../results/results_data{{data_idx}}/result_xi{xi}_occ{occ}.npy".format(xi=xi, occ=occ) for xi in range(min_xi, max_xi+1) for occ in range(min_occ, max_occ+1)] +
+        ["filter_results.py"] + ["../results/results_data{data_idx}/result_ind.npy"]
+    output:
+        "../results/results_data{data_idx}/alpha{alpha}result_filtered.npy"
+    shell:
+        "python filter_results.py {wildcards.data_idx} {wildcards.alpha}"
+
+# Rule to plot the validation results
+rule plot:
+    input:
+        script="plot_performance.py",
+        results=["../results/results_data{data_idx}/alpha{alpha}result_filtered.npy".format(data_idx=data_idx, alpha=np.round(alpha,2)) for alpha in alphas for data_idx in data_idxs]
+    output:
+        '../figures/FPFN_performance.eps' 
+    shell:
+        "python {input.script}"

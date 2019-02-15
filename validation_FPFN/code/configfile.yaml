@@ -1,0 +1,28 @@
+# Parameters performance evaluation
+# idxs of data to generate and analyze (integer between 0 and 3, see documentation generate_art_data,py)
+data_idxs : [0,1,2,3]
+# Minimum size of pattern to analyze
+min_xi : 3
+# Minimum num occ pattern to analyze
+min_occ : 3
+# Maximum size of pattern to analyze
+max_xi : 10
+# Maximum num occ pattern to analyze
+max_occ : 10
+# SPADE parameters
+# max. time window width in number of bins
+winlen : 50 
+# resolution in ms
+binsize : 1.0 
+# Multiple of the binsize to dither data
+dither : 5 * binsize
+# number of surrogates for psf
+n_surr : 5000 
+# Spectrum ('#' for 2d-spectrum '3d#' for 3d-spectrum
+spectrum : '3d#'
+# PSR param
+psr_param : [2,0,0]
+# List of significances level to use in PSF
+alphas : [0.01]
+# Statistical correction
+correction : 'hb'

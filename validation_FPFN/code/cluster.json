@@ -1,0 +1,17 @@
+{
+    "__default__": {
+        "time": "72:00:00",
+        "n":1,
+        "mem":"8G",
+        "name"      : "{wildcards}.{rule}"
+
+    },
+      "indep_data": {
+        "time": "72:00:00",
+        "n":96,
+        "mem":"8G",
+        "name"      : "{wildcards}.{rule}"
+
+    }
+
+}
