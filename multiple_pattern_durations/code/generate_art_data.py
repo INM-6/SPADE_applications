@@ -3,14 +3,6 @@ import quantities as pq
 import neo
 import elephant.spike_train_generation as stg
 import yaml
-try:
-    import matplotlib.pyplot as plt
-    make_raster =True
-    from matplotlib import rc
-    # activate latex text rendering
-    rc('text', usetex=True)
-except:
-    make_raster =False
 import os
 from scipy.stats import binom
 import scipy

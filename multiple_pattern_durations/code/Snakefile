@@ -33,6 +33,8 @@ rule generate_data:
         'configfile.yaml'
     output:
         "../data/art_data.npy"
+    conda:
+        "/envs/SPADE_applications.yaml"
     shell:
         "python generate_art_data.py"
 
@@ -52,6 +54,8 @@ rule filter_results:
         scripts = 'filter_results.py'
     output:
         '../results/{spectrum}/winlen{w}/filtered_patterns.npy'
+    conda:
+        "/envs/SPADE_applications.yaml"
     shell:
         "python filter_results.py '{wildcards.spectrum}'"
 
@@ -62,5 +66,7 @@ rule plot:
     output:
         ['../figures/pval_spectrum.eps',
         '../figures/pattern_count.eps']
+    conda:
+        "/envs/SPADE_applications.yaml"
     shell:
         "python plot_res.py"
