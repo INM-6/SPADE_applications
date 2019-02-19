@@ -1,0 +1,33 @@
+configfile:'configfile.yaml'
+
+import numpy as np
+import quantities as pq
+
+# Loading parameters
+winlen =config['winlen']
+binsize = config['binsize']
+rates = config['rate']
+t_stops = config['t_stop']
+ns = config['n']
+
+expected_num_spikes = {}
+for n in ns:
+    for rate in rates:
+        for t_stop in t_stops:
+            expected_num_spikes[n*rate*t_stop] = {'n':n, 't_stop':t_stop, 'rate':rate}
+
+# Rule collecting all the outputs    
+rule all:
+    input:
+        expand('../results/{expected_num_spikes}/profiling_results.npy', expected_num_spikes=expected_num_spikes)
+
+# Rule to generate the artificial data
+rule profile_data:
+    input:
+        'configfile.yaml'
+    output:
+        '../results/{expected_num_spikes}/profiling_results.npy'
+#    conda:
+#        "/envs/SPADE_applications.yaml"
+    shell:
+        "python profiling.py {wildcards.expected_num_spikes}"

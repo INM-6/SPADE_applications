@@ -1,0 +1,12 @@
+# Data parameters
+# Background firing rate in Hz
+rate : [15]
+# Length of data
+t_stop : [2, 4, 6, 8, 10]
+# Number of spiketrains
+n : [100]
+# SPADE parameters
+# Length sliding window
+winlen : 50
+#Binsize for teh analysis in ms
+binsize : 1
