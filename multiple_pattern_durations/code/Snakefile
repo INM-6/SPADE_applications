@@ -30,43 +30,46 @@ rule all:
 # Rule to generate the artificial data
 rule generate_data:
     input:
-        'configfile.yaml'
+        configfile = 'configfile.yaml',
+        script = 'generate_art_data.py'
     output:
         "../data/art_data.npy"
     conda:
-        "/envs/SPADE_applications.yaml"
+        "envs/SPADE_applications.yml"
     shell:
-        "python generate_art_data.py"
+        "python {input.script}"
 
 # Rule to analyze the data (no filtering applied yet)
 rule analyze_data:
     input:
-        "../data/art_data.npy"
+        data = "../data/art_data.npy",
+        script = 'spade_analysis.py'
     output:
         '../results/{spectrum}/winlen{w}/art_data_results.npy'
     shell:
-        "mpirun python spade_analysis.py {wildcards.w} '{wildcards.spectrum}'"
+        "mpirun python  {input.script} {wildcards.w} '{wildcards.spectrum}'"
 
 # Rule to filter the data using Pattern Specrum Filtering
 rule filter_results:
     input:
         results = '../results/{spectrum}/winlen{w}/art_data_results.npy',
-        scripts = 'filter_results.py'
+        script = 'filter_results.py'
     output:
         '../results/{spectrum}/winlen{w}/filtered_patterns.npy'
     conda:
-        "/envs/SPADE_applications.yaml"
+        "envs/SPADE_applications.yml"
     shell:
-        "python filter_results.py '{wildcards.spectrum}'"
+        "python {input.script} '{wildcards.spectrum}'"
 
 # Rule to produce figure
 rule plot:
     input:
-        expand('../results/{spectrum}/winlen{w}/filtered_patterns.npy', spectrum=spectra, w=winlens)
+        figures = expand('../results/{spectrum}/winlen{w}/filtered_patterns.npy', spectrum=spectra, w=winlens),
+        script = 'plot_res.py'
     output:
         ['../figures/pval_spectrum.eps',
         '../figures/pattern_count.eps']
     conda:
-        "/envs/SPADE_applications.yaml"
+        "envs/SPADE_applications.yml"
     shell:
-        "python plot_res.py"
+        "python {input.script}"

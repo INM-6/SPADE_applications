@@ -4,5 +4,6 @@ snakemake --jobs 1000\
           --cluster-config cluster.json\
           --jobname "{jobid}.{rulename}"\
           --keep-going\
-          --rerun-incomplete
+          --rerun-incomplete\
+          --use-conda
 
