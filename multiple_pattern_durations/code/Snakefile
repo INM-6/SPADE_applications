@@ -46,6 +46,8 @@ rule analyze_data:
         script = 'spade_analysis.py'
     output:
         '../results/{spectrum}/winlen{w}/art_data_results.npy'
+    conda:
+        "envs/SPADE_applications.yml"
     shell:
         "mpirun python  {input.script} {wildcards.w} '{wildcards.spectrum}'"
 
