@@ -199,7 +199,6 @@ def compute_xy(data, xaxis, ax=None, **kwargs):
                 np.array(kwargs['function'](
                     x_min_max, popt[0], popt[1])) / 60.0,
                 color=kwargs['colors'], linewidth=0.7, linestyle=kwargs['linestyle'])
-
     ax.plot(xaxis, np.array(y) / 60.0, '.', color=kwargs['colors'], marker=kwargs['marker'],
             label=kwargs['label'], markersize=3., linestyle=kwargs['linestyle'])
     return ax
@@ -228,25 +227,22 @@ colores = cmap
 f, ax = plt.subplots(2, figsize=(
     8.5 / inch2cm, 10 / inch2cm), sharex=False)
 
+interpolate = False
+linestyle = ':'
+
 # Plotting all functions
 for idx, axes in enumerate(ax):
-    if idx == 0:
-        interpolate = False
-        linestyle = ':'
-    else:
-        interpolate = False
-        linestyle = ':'    # plot small dots
-    # Plot Lattice
+    # Plot FP-growth
     compute_xy(
         time_fpgrwoth, count_spikes, axes, function=square,
         label="FP-growth", colors=colores[3], marker="*", interpolate=interpolate,
-        linestyle=linestyle)
-    # Plot Concepts
+        linestyle='-.')
+    # Plot FCA
     compute_xy(
         time_fast_fca, count_spikes, axes, function=linear,
         label="Fast-FCA", colors=colores[1], marker="o",
         interpolate=interpolate, linestyle=linestyle)
-    # Plot Stability
+    # Plot Spectra
     compute_xy(
         np.array(time_fpgrwoth)*2000, count_spikes, axes, function=poly4,
         label="2-dspectrum FP-growth", colors=colores[2], marker="d",
