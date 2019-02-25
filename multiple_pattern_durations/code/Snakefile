@@ -24,8 +24,8 @@ rule all:
     input:
         expand('../results/{spectrum}/winlen{w}/filtered_patterns.npy', spectrum=spectra, w=winlens) +
         expand('../results/{spectrum}/winlen{w}/art_data_results.npy', spectrum=spectra, w=winlens) +
-        ['../figures/pval_spectrum.eps',
-        '../figures/pattern_count.eps'] 
+        ['../figures/raster_patt_count_spectra.eps'] +
+        ['../figures/pvalues_table.npy']
 
 # Rule to generate the artificial data
 rule generate_data:
@@ -42,8 +42,8 @@ rule generate_data:
 # Rule to analyze the data (no filtering applied yet)
 rule analyze_data:
     input:
-        data = ancient("../data/art_data.npy"),
-        script = ancient('spade_analysis.py')
+        data = "../data/art_data.npy",
+        script = 'spade_analysis.py'
     output:
         '../results/{spectrum}/winlen{w}/art_data_results.npy'
     conda:
@@ -69,7 +69,7 @@ rule plot:
         figures = expand('../results/{spectrum}/winlen{w}/filtered_patterns.npy', spectrum=spectra, w=winlens),
         script = 'plot_res.py'
     output:
-        ['../figures/raster_patt_count_spectra.eps']
+        ['../figures/raster_patt_count_spectra.eps', '../figures/pvalues_table.npy']
     conda:
         "envs/SPADE_applications.yml"
     shell:

@@ -77,7 +77,9 @@ ax_raster.tick_params(labelsize=tick_size)
 
 
 ########### Plotting SPADE results ##########
+p_values_table = {}
 for spectrum_idx, spectrum in enumerate(spectra):
+    p_values_table[str(spectrum)] = {}
     ax_count = plt.subplot2grid((3, 2 * np.sum(winlens[:5])), (1, spectrum_idx*np.sum(winlens[:5])), rowspan=1, colspan=np.sum(winlens[:5]))
     # Plotting count and pval spectrum of patterns for each window length
     for w_idx, w in enumerate(winlens):
@@ -104,7 +106,6 @@ for spectrum_idx, spectrum in enumerate(spectra):
         ax_pval_spectrum = plt.subplot2grid(
             (3, 2 * np.sum(winlens[:5])),(2, spectrum_idx*np.sum(winlens[:5]) + sum(winlens[:w_idx])),
             colspan=sum(winlens[w_idx:w_idx + 1]))
-        print((2, spectrum_idx*np.sum(winlens[:5]) + sum(winlens[:w_idx])))
         pcol = ax_pval_spectrum.pcolor(
             pval_matrix,  norm=LogNorm(vmin=0.0001, vmax=1), cmap=plt.cm.Greys)
         if spectrum == '#':
@@ -128,7 +129,7 @@ for spectrum_idx, spectrum in enumerate(spectra):
         ax_pval_spectrum.set_xticklabels(range(0,pval_matrix.shape[1], 2), size=tick_size)
         if w_idx == len(winlens)//2+1:
             ax_pval_spectrum.set_xlabel('pattern duration$(d)$', size=label_size)
-        if w_idx==0  and spectrum=='#':
+        if w_idx == 0 and spectrum == '#':
             ax_pval_spectrum.set_yticks(y_ticks)
             ax_pval_spectrum.set_yticklabels(range(2, pval_matrix.shape[0] + 2), size=tick_size)
             ax_pval_spectrum.set_ylabel('$\#$ occurrences$(c)$', size=label_size)
@@ -141,6 +142,12 @@ for spectrum_idx, spectrum in enumerate(spectra):
             cbar.ax.tick_params(labelsize=tick_size)
         ax_pval_spectrum.set_xlim(0, pval_matrix.shape[1])
         ax_pval_spectrum.set_title(w*binsize.magnitude, size=label_size)
+        if w == 13:
+            print(pval_matrix[-2, :])
+            pattern_length = [0,2,6,8,12]
+            p_val_arr = np.take(pval_matrix[2, :], pattern_length)
+            p_values_table[str(spectrum)][str(w)] = p_val_arr
+            print(p_val_arr)
 
     if spectrum == '#':
         ax_count.set_title('Results 2-d spectrum', size=text_size)
@@ -162,3 +169,5 @@ for folder in split_path(figure_path):
 fig_formats = ['eps', 'png']
 for format in fig_formats:
     figure.savefig(figure_path + '/raster_patt_count_spectra.{}'.format(format))
+# save p_values_table (only for window = 13 and n_occ = 4)
+np.save('../figures/pvalues_table.npy', p_values_table)
