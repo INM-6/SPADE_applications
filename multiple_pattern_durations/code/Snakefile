@@ -61,7 +61,7 @@ rule filter_results:
     conda:
         "envs/SPADE_applications.yml"
     shell:
-        "python {input.script} '{wildcards.spectrum}'"
+        "python {input.script} '{wildcards.spectrum}' '{wildcards.w}'"
 
 # Rule to produce figure
 rule plot:
