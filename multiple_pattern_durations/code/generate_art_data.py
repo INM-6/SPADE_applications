@@ -6,7 +6,7 @@ import yaml
 import os
 from scipy.stats import binom
 from scipy.special import binom as binom_coeff
-
+import math
 
 # Function to create new folders
 def mkdirp(directory):
@@ -75,7 +75,7 @@ lengths = list(
 
 # Probability to have one repetion of the pattern assuming Poiss
 p = (rate.simplified.magnitude * binsize.simplified.magnitude) ** xi
-num_combination_patt = binom_coeff(n,xi) * xi * (winlen-2)
+num_combination_patt = (math.factorial(n)/math.factorial(n-xi)) * (winlen)
 # Computing min_occ as 0.01 percentile of a binominal(n_bins, p)
 sgnf_occ_found = False
 occ = 2
