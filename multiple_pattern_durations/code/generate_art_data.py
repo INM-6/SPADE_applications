@@ -80,13 +80,20 @@ num_combination_patt = (math.factorial(n)/math.factorial(n-xi)) * (winlen)
 sgnf_occ_found = False
 occ = 2
 while not sgnf_occ_found:
+    num_window_positions = (t_stop-winlen*binsize).simplified.magnitude/binsize.simplified.magnitude
     p_occ = binom.pmf(
-        occ, t_stop.simplified.magnitude/binsize.simplified.magnitude, p) * num_combination_patt
+        occ, num_window_positions, p) * num_combination_patt
     if p_occ < alpha:
         sgnf_occ_found = True
     else:
         occ += 1
 
+# Computation analytical p-values
+theo_pvalues = []
+for l in lengths:
+    num_combination_patt = (math.factorial(n) / math.factorial(n - xi)) * (l)
+    theo_pvalues.append(binom.sf(occ-1,
+        (t_stop.simplified.magnitude-l.simplified.magnitude)/binsize.simplified.magnitude, p)*num_combination_patt)
 
 # Generating the data
 # Fixing the seed
