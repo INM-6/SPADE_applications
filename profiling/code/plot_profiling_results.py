@@ -245,21 +245,21 @@ for idx, axes in enumerate(ax):
     # Plot Spectra
     compute_xy(
         np.array(time_fpgrwoth)*2000, count_spikes, axes, function=poly4,
-        label="2-dspectrum FP-growth", colors=colores[2], marker="d",
+        label="2d spectrum FP-growth", colors=colores[2], marker="d",
         interpolate=interpolate, linestyle='-.')
     compute_xy(
         np.array(time_fpgrwoth) * 2000,
         count_spikes, axes, function=poly4,
-        label="3-dspectrum FP-growth", colors=colores[0], marker="v",
+        label="3d spectrum FP-growth", colors=colores[0], marker="v",
         interpolate=interpolate, linestyle=linestyle)
     compute_xy(
         np.array(time_fast_fca)*2000, count_spikes, axes, function=poly4,
-        label="2-dspectrum Fast-FCA", colors=colores[4], marker="d",
+        label="2d spectrum Fast-FCA", colors=colores[4], marker="d",
         interpolate=interpolate, linestyle='-.')
     compute_xy(
         np.array(time_fast_fca) * 2000,
         count_spikes, axes, function=poly4,
-        label="3-dspectrum Fast-FCA", colors=colores[5], marker="v",
+        label="3d spectrum Fast-FCA", colors=colores[5], marker="v",
         interpolate=interpolate, linestyle=linestyle)
 
 
