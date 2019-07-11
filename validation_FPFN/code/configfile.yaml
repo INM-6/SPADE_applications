@@ -2,7 +2,7 @@
 # idxs of data to generate and analyze (integer between 0 and 3, see documentation generate_art_data,py)
 data_idxs : [0,1,2,3]
 # Minimum size of pattern to analyze
-min_xi : 3
+min_xi : 2
 # Minimum num occ pattern to analyze
 min_occ : 3
 # Maximum size of pattern to analyze
@@ -15,7 +15,7 @@ winlen : 50
 # resolution in ms
 binsize : 1.0 
 # Multiple of the binsize to dither data
-dither : 5 * binsize
+dither : 5
 # number of surrogates for psf
 n_surr : 5000 
 # Spectrum ('#' for 2d-spectrum '3d#' for 3d-spectrum
