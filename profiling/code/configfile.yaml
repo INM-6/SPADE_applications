@@ -2,11 +2,13 @@
 # Background firing rate in Hz
 rate : [15]
 # Length of data
-t_stop : [2, 4, 6, 8, 10]
+#t_stop : [2, 4, 6, 8, 10]
+t_stop : [2]
 # Number of spiketrains
-n : [100]
+#n : [100]
+n : [100, 200, 300, 400, 500]
 # SPADE parameters
 # Length sliding window
 winlen : 50
-#Binsize for teh analysis in ms
+#Binsize for the analysis in ms
 binsize : 1
