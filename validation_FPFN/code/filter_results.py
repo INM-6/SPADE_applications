@@ -52,7 +52,7 @@ else:
     # Computing non-significant entries of the spectrum applying
     # the statistical correction
     ns_sgnt = spade.test_signature_significance(
-        pval_spectrum, alpha, corr=correction, report='e',
+        pval_spectrum, alpha, corr=correction, report='non_significant',
         spectrum=spectrum)
 
 filtered_results = {}
