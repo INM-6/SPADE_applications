@@ -73,6 +73,7 @@ for p_idx, p in enumerate(stps):
                  markersize=1.5)
 ax_raster.set_xlabel('time (s)', size=label_size)
 ax_raster.set_ylabel('neuron id', size=label_size)
+ax_raster.set_ylim(-0.5, 15)
 ax_raster.tick_params(labelsize=tick_size)
 
 
@@ -90,9 +91,10 @@ for spectrum_idx, spectrum in enumerate(spectra):
         ax_count.bar(w_idx+1, len(patterns), color='k', width=0.5)
         if w_idx == len(winlens)-1:
             ax_count.plot(w_idx + 1, w_idx + 1, 'g^', markersize=4,
-                          label='Number injected patterns')
+                          label='Number of STPs')
         else:
             ax_count.plot(w_idx + 1, w_idx + 1, 'g^', markersize=4)
+        ax_count.set_yticks(np.arange(0, len(stps)+1))
         for tick in ax_count.xaxis.get_major_ticks():
             tick.label.set_fontsize(tick_size)
         # Plotting pvalue spectra
@@ -128,39 +130,41 @@ for spectrum_idx, spectrum in enumerate(spectra):
         ax_pval_spectrum.set_xticks(x_ticks)
         ax_pval_spectrum.set_xticklabels(range(0,pval_matrix.shape[1], 2), size=tick_size)
         if w_idx == len(winlens)//2+1:
-            ax_pval_spectrum.set_xlabel('pattern duration$(d)$', size=label_size)
+            ax_pval_spectrum.set_xlabel('d (ms)', size=label_size)
         if w_idx == 0 and spectrum == '#':
             ax_pval_spectrum.set_yticks(y_ticks)
             ax_pval_spectrum.set_yticklabels(range(2, pval_matrix.shape[0] + 2), size=tick_size)
-            ax_pval_spectrum.set_ylabel('$\#$ occurrences$(c)$', size=label_size)
+            ax_pval_spectrum.set_ylabel('c', size=label_size)
         else:
             ax_pval_spectrum.set_yticklabels(())
             ax_pval_spectrum.set_yticks(())
-        if w_idx == len(winlens) - 1 and spectrum=='3d#':
-            cbar = figure.colorbar(pcol, ax = ax_pval_spectrum)
+        if w_idx == len(winlens) - 1 and spectrum == '3d#':
+            cbar = figure.colorbar(pcol, ticks=[0.0001, 0.001, 0.01, 0.1, 1], ax=ax_pval_spectrum)
             cbar.set_label('p-values', size=label_size)
             cbar.ax.tick_params(labelsize=tick_size)
+            cbar.ax.minorticks_off()
         ax_pval_spectrum.set_xlim(0, pval_matrix.shape[1])
-        ax_pval_spectrum.set_title(w*binsize.magnitude, size=label_size)
+        ax_pval_spectrum.set_title(int(w*binsize.magnitude), size=label_size)
         if w == 13:
-            print(pval_matrix[-2, :])
+            # print(pval_matrix[-2, :])
             pattern_length = [0,2,6,8,12]
             p_val_arr = np.take(pval_matrix[2, :], pattern_length)
             p_values_table[str(spectrum)][str(w)] = p_val_arr
-            print(p_val_arr)
+            # print(p_val_arr)
 
     if spectrum == '#':
-        ax_count.set_title('Results 2-d spectrum', size=text_size)
-        ax_count.set_ylabel('detected patterns count', size=label_size)
+        ax_count.set_title('2d-SPADE', size=text_size)
+        ax_count.set_ylabel('detected STPs', size=label_size)
     elif spectrum == '3d#':
-        ax_count.set_title('Results 3-d spectrum', size=text_size)
+        ax_count.set_title('3d-SPADE', size=text_size)
         ax_count.set_yticks(())
     ax_count.set_xticks(range(1, len(winlens)+1))
-    ax_count.set_xticklabels(winlens*binsize.magnitude)
+    ax_count.set_xticklabels(winlens*int(binsize.magnitude))
     ax_count.tick_params(labelsize=tick_size)
     ax_count.set_ylim([0,len(winlens)+1])
-    ax_count.set_xlabel('window length (ms)', size=label_size)
-    ax_count.legend(loc='best', fontsize=label_size)
+    ax_count.set_xlabel('w (ms)', size=label_size)
+    if spectrum_idx==0:
+        ax_count.legend(loc='best', fontsize=label_size)
 figure_path = '../figures'
 path_temp = './'
 for folder in split_path(figure_path):
