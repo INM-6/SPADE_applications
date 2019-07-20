@@ -183,7 +183,7 @@ for data_idx in data_idxs:
         else:
             sts_rep['sts_0occ_0xi'].append(sts)
         # Iterating different complexities of the patterns
-        for xi in range(3, 11):
+        for xi in range(2, 11):
             # Iterating different numbers of occurrences
             for occurr in range(3, 11):
                 # Generating the stp
