@@ -180,7 +180,7 @@ def compute_xy(data, xaxis, ax=None, **kwargs):
             Marker of the curve
         interpolate : bool
             Determines if the curve should be interpolated or not
-        linesytle : string
+        linestyle : string
             Set the linestyle of the plot
 
     Returns
@@ -200,7 +200,8 @@ def compute_xy(data, xaxis, ax=None, **kwargs):
                     x_min_max, popt[0], popt[1])) / 60.0,
                 color=kwargs['colors'], linewidth=0.7, linestyle=kwargs['linestyle'])
     ax.plot(xaxis, np.array(y) / 60.0, '.', color=kwargs['colors'], marker=kwargs['marker'],
-            label=kwargs['label'], markersize=3., linestyle=kwargs['linestyle'])
+            label=kwargs['label'], markersize=4., linestyle=kwargs['linestyle'],
+            markerfacecolor=kwargs['markerfacecolor'])
     return ax
 
 
@@ -225,7 +226,8 @@ for i in range(1, NUM_COLORS + 1):
     colores[i - 1] = color
 colores = cmap
 f, ax = plt.subplots(2, figsize=(
-    8.5 / inch2cm, 10 / inch2cm), sharex=False)
+    8.5 / inch2cm, 10 / inch2cm), sharex=True)
+f.subplots_adjust(hspace=0)
 
 interpolate = False
 linestyle = ':'
@@ -235,32 +237,35 @@ for idx, axes in enumerate(ax):
     # Plot FP-growth
     compute_xy(
         time_fpgrwoth, count_spikes, axes, function=square,
-        label="FP-growth", colors=colores[3], marker="*", interpolate=interpolate,
-        linestyle='-.')
+        label="FP-growth (C++)", colors=colores[3], marker="o",
+        interpolate=interpolate, linestyle='-.', markerfacecolor=colores[3])
     # Plot FCA
     compute_xy(
         time_fast_fca, count_spikes, axes, function=linear,
-        label="Fast-FCA", colors=colores[1], marker="o",
-        interpolate=interpolate, linestyle=linestyle)
+        label="Fast-FCA (Python)", colors=colores[1], marker="o",
+        interpolate=interpolate, linestyle=linestyle,
+        markerfacecolor='None')
     # Plot Spectra
     compute_xy(
         np.array(time_fpgrwoth)*2000, count_spikes, axes, function=poly4,
-        label="2d spectrum FP-growth", colors=colores[2], marker="d",
-        interpolate=interpolate, linestyle='-.')
+        label="2d FP-growth", colors=colores[2], marker=".",
+        interpolate=interpolate, linestyle='-.', markerfacecolor=colores[2])
     compute_xy(
         np.array(time_fpgrwoth) * 2000,
         count_spikes, axes, function=poly4,
-        label="3d spectrum FP-growth", colors=colores[0], marker="v",
-        interpolate=interpolate, linestyle=linestyle)
+        label="3d FP-growth", colors=colores[0], marker="o",
+        interpolate=interpolate, linestyle=linestyle,
+        markerfacecolor='None')
     compute_xy(
         np.array(time_fast_fca)*2000, count_spikes, axes, function=poly4,
-        label="2d spectrum Fast-FCA", colors=colores[4], marker="d",
-        interpolate=interpolate, linestyle='-.')
+        label="2d Fast-FCA", colors=colores[4], marker="o",
+        interpolate=interpolate, linestyle='-.', markerfacecolor=colores[4])
     compute_xy(
         np.array(time_fast_fca) * 2000,
         count_spikes, axes, function=poly4,
-        label="3d spectrum Fast-FCA", colors=colores[5], marker="v",
-        interpolate=interpolate, linestyle=linestyle)
+        label="3d Fast-FCA", colors=colores[5], marker="o",
+        interpolate=interpolate, linestyle=linestyle,
+        markerfacecolor='None')
 
 
 # Axes specific things
@@ -269,7 +274,7 @@ ax[0].set_ylim(-10, np.max(np.array(time_fast_fca) * 2000) / 60.0 + 100)
 ax[0].set_ylabel("compute time (min)", size=label_size)
 ax[0].set_xticks(count_spikes)
 ax[0].set_xticklabels(count_spikes, size=tick_size)
-ax[0].set_xlabel("number of spikes", size=label_size)
+# ax[0].set_xlabel("number of spikes", size=label_size)
 ax[0].tick_params(axis='both', length=2., labelsize=tick_size)
 # Ax 1
 ax[1].tick_params(axis='y', which='minor', left='off')
