@@ -217,17 +217,17 @@ colors = {
     "lightgray": (0.65, 0.65, 0.65),
     "white": (1.0, 1.0, 1.0)
 }
-NUM_COLORS = 6
+NUM_COLORS = 10
 cm = plt.get_cmap('hsv')
-cmap = sns.color_palette("husl", NUM_COLORS)
+cmap = sns.color_palette("muted", NUM_COLORS)
 colores = {}
 for i in range(1, NUM_COLORS + 1):
     color = cm(1. * i // NUM_COLORS)
     colores[i - 1] = color
 colores = cmap
-f, ax = plt.subplots(2, figsize=(
-    8.5 / inch2cm, 10 / inch2cm), sharex=True)
-f.subplots_adjust(hspace=0)
+f, ax = plt.subplots(2, 1, figsize=(
+    8.5 / inch2cm, 11 / inch2cm))
+f.subplots_adjust(hspace=0.05, bottom=0.2)
 
 interpolate = False
 linestyle = ':'
@@ -237,35 +237,36 @@ for idx, axes in enumerate(ax):
     # Plot FP-growth
     compute_xy(
         time_fpgrwoth, count_spikes, axes, function=square,
-        label="FP-growth (C++)", colors=colores[3], marker="o",
-        interpolate=interpolate, linestyle='-.', markerfacecolor=colores[3])
+        label="FP-growth (C++)", colors=colores[1], marker="o",
+        interpolate=interpolate, linestyle='-', markerfacecolor='None')
     # Plot FCA
     compute_xy(
         time_fast_fca, count_spikes, axes, function=linear,
-        label="Fast-FCA (Python)", colors=colores[1], marker="o",
+        label="Fast-FCA (Python)", colors=colores[0], marker="o",
         interpolate=interpolate, linestyle=linestyle,
-        markerfacecolor='None')
+        markerfacecolor=colores[0])
     # Plot Spectra
     compute_xy(
         np.array(time_fpgrwoth)*2000, count_spikes, axes, function=poly4,
-        label="2d FP-growth", colors=colores[2], marker=".",
-        interpolate=interpolate, linestyle='-.', markerfacecolor=colores[2])
+        label="2d FP-growth", colors=colores[9], marker="o",
+        interpolate=interpolate, linestyle='-', markerfacecolor='None')
     compute_xy(
         np.array(time_fpgrwoth) * 2000,
         count_spikes, axes, function=poly4,
-        label="3d FP-growth", colors=colores[0], marker="o",
+        label="3d FP-growth", colors=colores[3], marker="o",
         interpolate=interpolate, linestyle=linestyle,
-        markerfacecolor='None')
+        markerfacecolor=colores[3])
     compute_xy(
         np.array(time_fast_fca)*2000, count_spikes, axes, function=poly4,
         label="2d Fast-FCA", colors=colores[4], marker="o",
-        interpolate=interpolate, linestyle='-.', markerfacecolor=colores[4])
+        interpolate=interpolate, linestyle='-',
+        markerfacecolor='None')
     compute_xy(
         np.array(time_fast_fca) * 2000,
         count_spikes, axes, function=poly4,
-        label="3d Fast-FCA", colors=colores[5], marker="o",
+        label="3d Fast-FCA", colors=colores[2], marker="o",
         interpolate=interpolate, linestyle=linestyle,
-        markerfacecolor='None')
+        markerfacecolor=colores[2])
 
 
 # Axes specific things
@@ -273,28 +274,43 @@ for idx, axes in enumerate(ax):
 ax[0].set_ylim(-10, np.max(np.array(time_fast_fca) * 2000) / 60.0 + 100)
 ax[0].set_ylabel("compute time (min)", size=label_size)
 ax[0].set_xticks(count_spikes)
-ax[0].set_xticklabels(count_spikes, size=tick_size)
+ax[0].set_xticklabels([], size=tick_size)
 # ax[0].set_xlabel("number of spikes", size=label_size)
 ax[0].tick_params(axis='both', length=2., labelsize=tick_size)
 # Ax 1
 ax[1].tick_params(axis='y', which='minor', left='off')
 ax[1].set_xticks(count_spikes)
 ax[1].set_xticklabels(count_spikes, size=tick_size)
-ax[1].set_xlabel("number of spikes", size=label_size)
+ax[1].set_xlabel("$N_s$", size=label_size)
 ax[1].set_ylabel('log (compute time)', size=label_size)
 ax[1].set_yscale('log')
 ax[1].tick_params(axis='both', length=2., labelsize=tick_size)
+
+# Set second x-axis
+ax2 = ax[1].twiny()
+
+# Decide the ticklabel position in the new x-axis,
+# then convert them to the position in the old x-axis
+newlabel = rates
+ax2.set_xticks(count_spikes)
+ax2.tick_params(length=2., labelsize=tick_size)
+ax2.xaxis.set_ticks_position('bottom')
+ax2.xaxis.set_label_position('bottom')
+ax2.spines['bottom'].set_position(('outward', 25))
+ax2.set_xlabel('Firing rate (Hz)', size=label_size)
+ax2.set_xlim(ax[1].get_xlim())
+ax2.set_xticklabels(newlabel, size=tick_size)
 
 # Put legend position
 axbox = ax[0].get_position()
 legend = ax[0].legend(loc="best", numpoints=1,
                       markerscale=0.9, prop={"size": label_size - 1},
-                      frameon=True, borderpad=0.1)
+                      frameon=True, borderpad=0.5)
 legend.get_frame().set_edgecolor('black')
 
 # Comment this if you want set manually the space between edges and graph
 # see above subplots_adjust
-plt.tight_layout()
+# plt.tight_layout()
 # plt.show()
 
 if savefig is True:
