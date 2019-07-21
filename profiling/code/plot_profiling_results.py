@@ -34,7 +34,7 @@ def split_path(path):
 
 
 # Script variables
-time_fpgrwoth = []
+time_fpgrowth = []
 time_fast_fca = []
 
 savefig = True
@@ -59,7 +59,7 @@ count_spikes = sorted(list(expected_num_spikes_dict.keys()))
 for num_spikes in count_spikes:
     res = np.load(
         "../results/{}/profiling_results.npy".format(num_spikes)).item()
-    time_fpgrwoth.append(res['results']['fp_growth'])
+    time_fpgrowth.append(res['results']['fp_growth'])
     time_fast_fca.append(res['results']['fast_fca'])
 
 
@@ -236,7 +236,7 @@ linestyle = ':'
 for idx, axes in enumerate(ax):
     # Plot FP-growth
     compute_xy(
-        time_fpgrwoth, count_spikes, axes, function=square,
+        time_fpgrowth, count_spikes, axes, function=square,
         label="FP-growth (C++)", colors=colores[1], marker="o",
         interpolate=interpolate, linestyle='-', markerfacecolor='None')
     # Plot FCA
@@ -247,11 +247,11 @@ for idx, axes in enumerate(ax):
         markerfacecolor=colores[0])
     # Plot Spectra
     compute_xy(
-        np.array(time_fpgrwoth)*2000, count_spikes, axes, function=poly4,
+        np.array(time_fpgrowth) * 2000, count_spikes, axes, function=poly4,
         label="2d FP-growth", colors=colores[9], marker="o",
         interpolate=interpolate, linestyle='-', markerfacecolor='None')
     compute_xy(
-        np.array(time_fpgrwoth) * 2000,
+        np.array(time_fpgrowth) * 2000,
         count_spikes, axes, function=poly4,
         label="3d FP-growth", colors=colores[3], marker="o",
         interpolate=interpolate, linestyle=linestyle,
