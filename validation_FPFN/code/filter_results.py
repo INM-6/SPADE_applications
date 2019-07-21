@@ -56,7 +56,7 @@ else:
         spectrum=spectrum)
 
 filtered_results = {}
-for xi in range(3,11):
+for xi in range(2,11):
     for occ in range(3,11):
         try:
             results, params = np.load(
