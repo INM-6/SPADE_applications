@@ -1,14 +1,14 @@
 # Data parameters
+# flag of the parameters varying
+keys : ['rate', 'neurons', 'time']
 # Background firing rate in Hz
-rate : [15]
+rate : [15, 30, 45, 60, 75]
 # Length of data
-#t_stop : [2, 4, 6, 8, 10]
-t_stop : [2]
+t_stop : [3, 6, 9, 12, 15]
 # Number of spiketrains
-#n : [100]
 n : [100, 200, 300, 400, 500]
 # SPADE parameters
 # Length sliding window
 winlen : 50
-#Binsize for the analysis in ms
+# Binsize for the analysis in ms
 binsize : 1
