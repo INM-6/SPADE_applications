@@ -7,54 +7,50 @@ import numpy as np
 import time
 import os
 import yaml
-
-# Function to create new folders
-def mkdirp(directory):
-    if not os.path.isdir(directory):
-        os.mkdir(directory)
-
-# Function to split path to single folders
-def split_path(path):
-    folders = []
-    while 1:
-        path, folder = os.path.split(path)
-        if folder != "":
-            folders.append(folder)
-        else:
-            if path != "":
-                folders.append(path)
-            break
-    folders.reverse()
-    return folders
+from utils import mkdirp, split_path, estimate_number_spikes
 
 # Initializing scripts parameters
 parser = argparse.ArgumentParser(description='Profiling the SPADE functions' + 
                                              'using independent Poisson Processes')
+parser.add_argument('key', metavar='type', type=str,
+                    help='varying parameter in data generation')
 parser.add_argument('expected_num_spikes', metavar='rate', type=int,
-                   help='expected number of spikes of the Poisson processes')
+                    help='expected number of spikes of the Poisson processes')
+
 args = parser.parse_args()
 expected_num_spikes = args.expected_num_spikes
+key = args.key
 
 with open("configfile.yaml", 'r') as stream:
     config = yaml.load(stream)
 
-winlen =config['winlen']
+winlen = config['winlen']
 binsize = config['binsize'] * pq.ms
 rates = config['rate']
 t_stops = config['t_stop']
 ns = config['n']
+keys = config['keys']
 
-expected_num_spikes_dict = {}
-for n in ns:
-    for rate in rates:
-        for t_stop in t_stops:
-            expected_num_spikes_dict[n*rate*t_stop] = {
-                'n':n, 't_stop':t_stop, 'rate':rate}
+expected_num_spikes_dict = estimate_number_spikes(keys=keys,
+                                                  ns=ns,
+                                                  rates=rates,
+                                                  t_stops=t_stops)
 
-# Parsing parameters
-rate = expected_num_spikes_dict[expected_num_spikes]['rate'] * pq.Hz
-t_stop = expected_num_spikes_dict[expected_num_spikes]['t_stop'] * pq.s
-n = expected_num_spikes_dict[expected_num_spikes]['n']
+# infer parameters for generating data
+if key == 'rate':
+    t_stop = t_stops[0] * pq.s
+    n = ns[0]
+    rate = expected_num_spikes_dict[key][expected_num_spikes]['rate'] * pq.Hz
+elif key == 'neurons':
+    t_stop = t_stops[0] * pq.s
+    rate = rates[0] * pq.Hz
+    n = expected_num_spikes_dict[key][expected_num_spikes]['n']
+elif key == 'time':
+    rate = rates[0] * pq.Hz
+    n = ns[0]
+    t_stop = expected_num_spikes_dict[key][expected_num_spikes]['t_stop'] * pq.s
+else:
+    raise KeyError('key should be either rate or neurons or time')
 
 num_rep = 10
 time_fast_fca = 0.
@@ -96,16 +92,17 @@ for rep in range(num_rep):
                 winlen=winlen)
     time_fast_fca += time.time() - t1
 
-time_profiles = {'fp_growth':time_fpgrowth/num_rep, 'fast_fca':time_fast_fca/num_rep}
+time_profiles = {'fp_growth': time_fpgrowth/num_rep,
+                 'fast_fca': time_fast_fca/num_rep}
 
 # Storing data
-res_path = '../results/{}/'.format(expected_num_spikes)
+res_path = '../results/{}/{}/'.format(key, expected_num_spikes)
 # Create path is not already existing
 path_temp = './'
 for folder in split_path(res_path):
     path_temp = path_temp + '/' + folder
     mkdirp(path_temp)
 
-np.save(res_path + '/profiling_results.npy',{'results':time_profiles,
-        'parameters': {'rate':rate, 't_stop':t_stop, 'n':n, 'winlen':winlen,
-        'binsize':binsize}})
+np.save(res_path + '/profiling_results.npy', {'results': time_profiles,
+        'parameters': {'rate': rate, 't_stop': t_stop, 'n': n,
+                       'winlen': winlen, 'binsize': binsize}})
