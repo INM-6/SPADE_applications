@@ -2,6 +2,7 @@ configfile:'configfile.yaml'
 
 import numpy as np
 import quantities as pq
+from utils import estimate_number_spikes
 
 # Loading parameters
 winlen =config['winlen']
@@ -9,25 +10,26 @@ binsize = config['binsize']
 rates = config['rate']
 t_stops = config['t_stop']
 ns = config['n']
+keys = config['keys']
 
-expected_num_spikes = {}
-for n in ns:
-    for rate in rates:
-        for t_stop in t_stops:
-            expected_num_spikes[n*rate*t_stop] = {'n':n, 't_stop':t_stop, 'rate':rate}
+expected_num_spikes_dict = estimate_number_spikes(keys=keys,
+                                                  ns=ns,
+                                                  rates=rates,
+                                                  t_stops=t_stops)
 
 # Rule collecting all the outputs    
 rule all:
     input:
-        expand('../results/{expected_num_spikes}/profiling_results.npy', expected_num_spikes=expected_num_spikes)
+        ['../results/{keys}/{expected_num_spikes}/profiling_results.npy'.format(keys=key, expected_num_spikes=expected_num_spikes)
+         for key in keys for expected_num_spikes in expected_num_spikes_dict[key]]
 
 # Rule to generate the artificial data
 rule profile_data:
     input:
         'configfile.yaml'
     output:
-        '../results/{expected_num_spikes}/profiling_results.npy'
+        '../results/{keys}/{expected_num_spikes}/profiling_results.npy'
 #    conda:
 #        "/envs/SPADE_applications.yaml"
     shell:
-        "python profiling.py {wildcards.expected_num_spikes}"
+        "python profiling.py {wildcards.keys} {wildcards.expected_num_spikes}"
