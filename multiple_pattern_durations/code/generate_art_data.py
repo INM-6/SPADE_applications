@@ -6,26 +6,9 @@ import yaml
 import os
 from scipy.stats import binom
 from scipy.special import binom as binom_coeff
+from utils import mkdirp, split_path
 import math
 
-# Function to create new folders
-def mkdirp(directory):
-    if not os.path.isdir(directory):
-        os.mkdir(directory)
-
-# Function to split path to single folders
-def split_path(path):
-    folders = []
-    while 1:
-        path, folder = os.path.split(path)
-        if folder != "":
-            folders.append(folder)
-        else:
-            if path != "":
-                folders.append(path)
-            break
-    folders.reverse()
-    return folders
 
 def generate_stp(occ, xi, t_stop, delays, t_start=0 * pq.s):
     '''
