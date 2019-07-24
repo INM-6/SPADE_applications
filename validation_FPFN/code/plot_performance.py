@@ -6,32 +6,16 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from matplotlib import rc
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from utils import mkdirp, split_path
+
 
 import random
 import neo
 # activate latex text rendering
 rc('text', usetex=True)
 plt.switch_backend('agg')
-import os
-# Function to create directory
-def mkdirp(directory):
-    if not os.path.isdir(directory):
-        os.mkdir(directory)
-# Function to split path to single folders
-def split_path(path):
-    folders = []
-    while 1:
-        path, folder = os.path.split(path)
-        if folder != "":
-            folders.append(folder)
-        else:
-            if path != "":
-                folders.append(path)
-            break
-    folders.reverse()
-    return folders
 
-# Signifcance leve (integer between 0 and 100)
+# Signifcance level (integer between 0 and 100)
 alpha = 0.01
 
 data_idxs = [0,1,2,3] # Index of non-stat data
