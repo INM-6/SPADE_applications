@@ -5,26 +5,9 @@ from matplotlib.colors import LogNorm
 from matplotlib import rc
 import yaml
 import quantities as pq
+from utils import mkdirp, split_path
 # activate latex text rendering
 rc('text', usetex=True)
-
-# Function to create directory
-def mkdirp(directory):
-    if not os.path.isdir(directory):
-        os.mkdir(directory)
-# Function to split path to single folders
-def split_path(path):
-    folders = []
-    while 1:
-        path, folder = os.path.split(path)
-        if folder != "":
-            folders.append(folder)
-        else:
-            if path != "":
-                folders.append(path)
-            break
-    folders.reverse()
-    return folders
 
 # Load parameter from configfile
 with open("configfile.yaml", 'r') as stream:
@@ -42,7 +25,7 @@ label_size = 6
 text_size = 8
 tick_size = 5
 
-####### Raster plot of the data #######
+####### Raster key of the data #######
 # Loading spiketrains and patterns
 data_file = np.load('../data/art_data.npy', encoding='latin1').item()
 sts = data_file['data']
@@ -88,12 +71,13 @@ for spectrum_idx, spectrum in enumerate(spectra):
         patterns, pval_spectrum, ns_sgnt, params = np.load(
             '../results/{}/winlen{}/filtered_patterns.npy'.format(spectrum,w),
              encoding='latin1')
-        ax_count.bar(w_idx+1, len(patterns), color='k', width=0.5)
+
+        ax_count.bar(w_idx+1, len(patterns), color='k', width=0.05)
         if w_idx == len(winlens)-1:
-            ax_count.plot(w_idx + 1, w_idx + 1, 'g^', markersize=4,
-                          label='Number of STPs')
+            ax_count.plot(w_idx + 1, w_idx + 1, 'x', markersize=4,
+                          label='Number of STPs', color='g')
         else:
-            ax_count.plot(w_idx + 1, w_idx + 1, 'g^', markersize=4)
+            ax_count.plot(w_idx + 1, w_idx + 1, 'x', markersize=4, color='g')
         ax_count.set_yticks(np.arange(0, len(stps)+1))
         for tick in ax_count.xaxis.get_major_ticks():
             tick.label.set_fontsize(tick_size)
@@ -109,7 +93,7 @@ for spectrum_idx, spectrum in enumerate(spectra):
             (3, 2 * np.sum(winlens[:5])),(2, spectrum_idx*np.sum(winlens[:5]) + sum(winlens[:w_idx])),
             colspan=sum(winlens[w_idx:w_idx + 1]))
         pcol = ax_pval_spectrum.pcolor(
-            pval_matrix,  norm=LogNorm(vmin=0.0001, vmax=1), cmap=plt.cm.Greys)
+            pval_matrix,  norm=LogNorm(vmin=0.0001, vmax=1), cmap=plt.cm.YlGnBu)
         if spectrum == '#':
             for duration in range(pval_matrix.shape[1]):
                 for occ in range(2, pval_matrix.shape[0]+2):
@@ -144,7 +128,7 @@ for spectrum_idx, spectrum in enumerate(spectra):
             cbar.ax.tick_params(labelsize=tick_size)
             cbar.ax.minorticks_off()
         ax_pval_spectrum.set_xlim(0, pval_matrix.shape[1])
-        ax_pval_spectrum.set_title(int(w*binsize.magnitude), size=label_size)
+        ax_pval_spectrum.set_title(int(w*binsize.magnitude), size=tick_size)
         if w == 13:
             # print(pval_matrix[-2, :])
             pattern_length = [0,2,6,8,12]
