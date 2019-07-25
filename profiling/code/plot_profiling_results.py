@@ -195,8 +195,8 @@ def compute_xy(data, xaxis, ax=None, **kwargs):
 
 
 # Plot configurations
-label_size = 6
-tick_size = 5
+label_size = 8
+tick_size = 6
 inch2cm = 2.540  # conversion from inches to centimeters
 
 colors = {
@@ -216,7 +216,7 @@ for i in range(1, NUM_COLORS + 1):
 colores = cmap
 f, ax = plt.subplots(2, 3, figsize=(
     18.4 / inch2cm, 9.2 / inch2cm))
-f.subplots_adjust(wspace=0.15, hspace=0.05, bottom=0.2, left=0.06, right=0.98)
+f.subplots_adjust(wspace=0.15, hspace=0.05, bottom=0.2, left=0.07, right=0.98)
 
 interpolate = False
 linestyle = ':'
@@ -280,13 +280,13 @@ for key_idx, key in enumerate(keys):
 
     # set titles only for upper plots
     if key == 'rate':
-        title = 'T = ' + str(t_stops[0]) + ' s, $N_s$ = '+ str(ns[0])
+        title = 'T = ' + str(t_stops[0]) + 's, N = '+ str(ns[0])
         ax[0][key_idx].set_title(title, size=label_size)
     elif key == 'time':
-        title = '$N_s$ = ' + str(ns[0]) + ', $\lambda$ = '+ str(rates[0]) + ' Hz'
+        title = 'N = ' + str(ns[0]) + ', $\lambda$ = '+ str(rates[0]) + 'Hz'
         ax[0][key_idx].set_title(title, size=label_size)
     elif key == 'neurons':
-        title = 'T = ' + str(t_stops[0]) + ' s, $\lambda$ = '+ str(rates[0]) + ' Hz'
+        title = 'T = ' + str(t_stops[0]) + 's, $\lambda$ = '+ str(rates[0]) + 'Hz'
         ax[0][key_idx].set_title(title, size=label_size)
     else:
         raise ValueError('key not valid')
@@ -297,7 +297,7 @@ for key_idx, key in enumerate(keys):
         # Put legend position
         axbox = ax[0][key_idx].get_position()
         legend = ax[0][key_idx].legend(loc="best", numpoints=1,
-                                       markerscale=0.9, prop={"size": label_size - 1},
+                                       markerscale=0.9, prop={"size": label_size - 2},
                                        frameon=True, borderpad=0.5)
         legend.get_frame().set_edgecolor('grey')
 
@@ -308,13 +308,13 @@ for key_idx, key in enumerate(keys):
     # then convert them to the position in the old x-axis
     if key == 'rate':
         newlabel = rates
-        label_add_ax = 'Firing rate (Hz)'
+        label_add_ax = '$\lambda$ (Hz)'
     elif key == 'time':
         newlabel = t_stops
-        label_add_ax = 'Time (s)'
+        label_add_ax = 'T (s)'
     elif key == 'neurons':
         newlabel = ns
-        label_add_ax = 'Neurons'
+        label_add_ax = 'N'
     else:
         raise ValueError('key not valid')
 

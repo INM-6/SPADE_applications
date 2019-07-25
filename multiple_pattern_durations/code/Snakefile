@@ -51,7 +51,7 @@ rule analyze_data:
     shell:
         "mpirun python  {input.script} {wildcards.w} '{wildcards.spectrum}'"
 
-# Rule to filter the data using Pattern Specrum Filtering
+# Rule to filter the data using Pattern Spectrum Filtering
 rule filter_results:
     input:
         results = '../results/{spectrum}/winlen{w}/art_data_results.npy',
