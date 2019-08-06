@@ -223,6 +223,7 @@ linestyle = ':'
 
 y1_lower_plot = np.array([])
 y2_lower_plot = np.array([])
+y2_upper_plot = np.array([])
 
 for key_idx, key in enumerate(keys):
     # Plotting all functions
@@ -328,14 +329,25 @@ for key_idx, key in enumerate(keys):
     ax2.set_xticklabels(newlabel, size=tick_size)
 
     # make the lower share the same ylim
-    y1, y2 = ax[1][key_idx].get_ylim()
-    y1_lower_plot = np.append(y1_lower_plot, y1)
-    y2_lower_plot = np.append(y2_lower_plot, y2)
+    y1_l, y2_l = ax[1][key_idx].get_ylim()
+    y1_lower_plot = np.append(y1_lower_plot, y1_l)
+    y2_lower_plot = np.append(y2_lower_plot, y2_l)
 
-ymin = np.max(y1_lower_plot)
-ymax = np.max(y2_lower_plot)
+    # make the time and the neurons plot share the same y axis (only in the
+    # max value)
+    if key == 'neurons' or key == 'time':
+        y1_u, y2_u = ax[0][key_idx].get_ylim()
+        y2_upper_plot = np.append(y2_upper_plot, y2_l)
+
+ymin_l = np.max(y1_lower_plot)
+ymax_l = np.max(y2_lower_plot)
+ymax_u = np.max(y2_upper_plot)
 for key_idx, key in enumerate(keys):
-    ax[1][key_idx].set_ylim(ymin, ymax)
+    ax[1][key_idx].set_ylim(ymin_l, ymax_l)
+    if key == 'neurons' or key == 'time':
+        y1_u, y2_u = ax[0][key_idx].get_ylim()
+        ax[0][key_idx].set_ylim(y1_u, ymax_u)
+
 
 # Comment this if you want set manually the space between edges and graph
 # see above subplots_adjust
