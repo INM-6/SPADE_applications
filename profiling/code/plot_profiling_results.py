@@ -174,6 +174,9 @@ def compute_xy(data, xaxis, ax=None, **kwargs):
 
 def plot(time_fpgrowth, time_fast_fca, keys, label_size=8, tick_size=6):
     """
+    Function plotting the profiling time for all SPADE components (FIM and
+    PSF), comparing the run time for the fpgrowth and the fast_fca algorithm
+    (both implemented in SPADE).
     Parameters
     ----------
     time_fpgrowth : dictionary
