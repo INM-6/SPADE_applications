@@ -10,7 +10,8 @@ import yaml
 from utils import mkdirp, split_path, estimate_number_spikes
 
 
-def compute_profiling_time(key, rate, t_stop, n, winlen, binsize, num_rep=10):
+def compute_profiling_time(key, expected_number_spikes, rate, t_stop, n,
+                           winlen, binsize, num_rep=10):
     """
     Function computing the profiling time needed to run SPADE on artificial
     poisson data of given rate, recording time, and number of neurons
@@ -20,6 +21,8 @@ def compute_profiling_time(key, rate, t_stop, n, winlen, binsize, num_rep=10):
         list of keys of the varying variable of the profiling analysis.
         Maximum of three keys, can be either 'neurons', 'time' and
         'rate'.
+    expected_number_spikes: int
+        expected number of spikes of the generated spike train
     rate: quantity
         rate of the poisson process
     t_stop: quantity
@@ -134,6 +137,7 @@ if __name__ == '__main__':
         raise KeyError('key should be either rate or neurons or time')
 
     compute_profiling_time(key=key,
+                           expected_num_spikes=expected_num_spikes,
                            rate=rate,
                            t_stop=t_stop,
                            n=n,
