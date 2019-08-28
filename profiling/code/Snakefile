@@ -21,15 +21,29 @@ expected_num_spikes_dict = estimate_number_spikes(keys=keys,
 rule all:
     input:
         ['../results/{keys}/{expected_num_spikes}/profiling_results.npy'.format(keys=key, expected_num_spikes=expected_num_spikes)
-         for key in keys for expected_num_spikes in expected_num_spikes_dict[key]]
+         for key in keys for expected_num_spikes in expected_num_spikes_dict[key]] + ['../figures/profiling_times.eps']
 
 # Rule to generate the artificial data
 rule profile_data:
     input:
-        'configfile.yaml'
+        configfile = 'configfile.yaml',
+        script = 'profiling.py'
     output:
         '../results/{keys}/{expected_num_spikes}/profiling_results.npy'
 #    conda:
 #        "/envs/SPADE_applications.yaml"
     shell:
-        "python profiling.py {wildcards.keys} {wildcards.expected_num_spikes}"
+        "python {input.script} {wildcards.keys} {wildcards.expected_num_spikes}"
+
+# Rule to produce figure
+rule plot:
+    input:
+        results = ['../results/{keys}/{expected_num_spikes}/profiling_results.npy'.format(keys=key, expected_num_spikes=expected_num_spikes)
+         for key in keys for expected_num_spikes in expected_num_spikes_dict[key]],
+        script = 'plot_profiling_results.py'
+    output:
+        '../figures/profiling_times.eps'
+    # conda:
+    #     "envs/SPADE_applications.yml"
+    shell:
+        "python {input.script}"
