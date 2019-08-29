@@ -2,9 +2,10 @@ name: SPADE_applications
 channels:
   - defaults
 dependencies:
+  - _libgcc_mutex=0.1=main
   - blas=1.0=mkl
-  - ca-certificates=2019.1.23=0
-  - certifi=2018.11.29=py36_0
+  - ca-certificates=2019.5.15=1
+  - certifi=2019.6.16=py36_1
   - cycler=0.10.0=py36_0
   - dbus=1.13.6=h746ee38_0
   - expat=2.2.6=he6710b0_0
@@ -28,17 +29,17 @@ dependencies:
   - libxml2=2.9.9=he19cac6_0
   - matplotlib=3.0.2=py36h5429711_0
   - mkl=2019.1=144
+  - mkl-service=1.1.2=py36he904b0f_5
   - mkl_fft=1.0.10=py36ha843d7b_0
   - mkl_random=1.0.2=py36hd81dba3_0
-  - mpi4py=2.0.0=py36_2
-  - mpich2=1.4.1p1=0
   - ncurses=6.1=he6710b0_1
   - numpy=1.15.4=py36h7e9f1db_0
   - numpy-base=1.15.4=py36hde5b4d6_0
-  - openssl=1.1.1a=h7b6447c_0
+  - openssl=1.1.1c=h7b6447c_1
   - pandas=0.24.1=py36he6710b0_0
   - patsy=0.5.1=py36_0
   - pcre=8.42=h439df22_0
+  - pip=18.1=py36_0
   - pyparsing=2.3.1=py36_0
   - pyqt=5.9.2=py36h05f1152_2
   - python=3.6.8=h0371630_0
@@ -57,10 +58,42 @@ dependencies:
   - tornado=5.1.1=py36h7b6447c_0
   - wheel=0.32.3=py36_0
   - xz=5.2.4=h14c3975_4
+  - yaml=0.1.7=had09818_2
   - zlib=1.2.11=h7b6447c_3
-  - pip=18.1=py36_0
   - pip:
-    - quantities==0.12.1
-    - elephant==0.6.0
-    - neo==0.7.1
-    - pyyaml==3.13
+    - appdirs==1.4.3
+    - attrs==19.1.0
+    - backcall==0.1.0
+    - chardet==3.0.4
+    - configargparse==0.14.0
+    - datrie==0.8
+    - decorator==4.4.0
+    - docutils==0.15.2
+    - elephant==0.6.3
+    - gitdb2==2.0.5
+    - gitpython==3.0.2
+    - idna==2.8
+    - ipython==7.7.0
+    - ipython-genutils==0.2.0
+    - jedi==0.15.1
+    - jsonschema==3.0.2
+    - neo==0.7.2
+    - parso==0.5.1
+    - pexpect==4.7.0
+    - pickleshare==0.7.5
+    - prompt-toolkit==2.0.9
+    - ptyprocess==0.6.0
+    - pygments==2.4.2
+    - pyrsistent==0.15.4
+    - pyyaml==5.1.2
+    - quantities==0.12.3
+    - ratelimiter==1.2.0.post0
+    - requests==2.22.0
+    - smmap2==2.0.5
+    - snakemake==5.5.4
+    - traitlets==4.3.2
+    - urllib3==1.25.3
+    - wcwidth==0.1.7
+    - wrapt==1.11.2
+prefix: /home/a.stella/miniconda3/envs/SPADE_applications
+
