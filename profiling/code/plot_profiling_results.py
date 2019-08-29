@@ -2,7 +2,7 @@
 """
 Plotting of the profiling results
 
-The code produces:
+The script produces:
 Profiling results for different components of SPADE. Run times as a function
 of the number of spikes by varying (as shown in the respective second x-axis)
 1) the firing rates λ of the neurons (left panel, fixed number of neurons N

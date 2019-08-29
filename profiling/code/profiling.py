@@ -1,3 +1,11 @@
+"""
+Analysis of the computing time
+
+The script produces:
+Profiling times of the time intensive components of SPADE, i.e. FIM and PSF.
+
+
+"""
 import elephant.spade as spade
 import elephant.spike_train_generation as stg
 import elephant.conversion as conv
@@ -33,6 +41,8 @@ def compute_profiling_time(key, expected_num_spikes, rate, t_stop, n,
         window length for the SPADE analysis
     binsize: quantity
         binsize for the SPADE analysis
+    num_rep: int
+        number of repetitions of
     """
 
     time_fast_fca = 0.
