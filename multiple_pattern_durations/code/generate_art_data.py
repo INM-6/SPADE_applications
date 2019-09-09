@@ -3,6 +3,7 @@ import quantities as pq
 import neo
 import elephant.spike_train_generation as stg
 import yaml
+from yaml import Loader
 import os
 from scipy.stats import binom
 from scipy.special import binom as binom_coeff
@@ -41,7 +42,7 @@ def generate_stp(occ, xi, t_stop, delays, t_start=0 * pq.s):
 
 # Load general parameters
 with open("configfile.yaml", 'r') as stream:
-    config = yaml.load(stream)
+    config = yaml.load(stream, Loader=Loader)
 
 xi = config['xi']
 winlen =config['winlen']

@@ -2,19 +2,28 @@ import numpy as np
 import elephant.spade as spade
 import argparse
 import yaml
-# Function to filter patterns when the output format os spade function is 'patterns'
+from yaml import Loader
+
+
+# Function to filter patterns when the output format of spade function
+# is 'patterns'
 def _pattern_spectrum_filter(patterns, ns_signature, spectrum, winlen):
-    '''Filter to select concept which signature is significant'''
+    """
+    Filter to select concept which signature is significant
+    """
     if spectrum == '3d#':
         keep_concept = patterns['signature'] + tuple([max(
-                np.abs(np.diff(np.array(patterns['lags'])%winlen)))]) not in ns_signature
+                np.abs(np.diff(np.array(patterns['lags']) % winlen)))]) \
+                       not in ns_signature
     else:
         keep_concept = patterns['signature'] not in ns_signature
 
     return keep_concept
 
+
 # Load parameters dictionary
-param_dict = np.load('../data/art_data.npy', encoding='latin1').item()['params']
+param_dict = np.load('../data/art_data.npy',
+                     encoding='latin1').item()['params']
 lengths = param_dict['lengths']
 binsize = param_dict['binsize']
 winlens = [int(l/binsize)+1 for l in lengths]
@@ -22,14 +31,15 @@ print(winlens)
 # Filtering parameters
 # Load general parameters
 with open("configfile.yaml", 'r') as stream:
-    config = yaml.load(stream)
+    config = yaml.load(stream, Loader=Loader)
 alpha = config['alpha']
 psr_param = config['psr_param']
 correction = config['correction']
 min_occ = config['min_occ']
 # Passing spectrum parameter
-parser = argparse.ArgumentParser(description='Compute spade on artificial data '
-                                             'for the given winlen and spectrum parameters')
+parser = argparse.ArgumentParser(description='Compute spade on artificial data'
+                                             ' for the given winlen and '
+                                             'spectrum parameters')
 parser.add_argument('spectrum', metavar='spectrum', type=str,
                    help='spectrum parameter of the spade function')
 parser.add_argument('winlen', metavar='winlen', type=int,
@@ -40,14 +50,17 @@ spectrum = args.spectrum
 winlen = args.winlen
 # Filtering parameters for the different window length
 # Loading result
-res_spade, params = np.load('../results/{}/winlen{}/art_data_results.npy'.format(spectrum,winlen), encoding='latin1')
+res_spade, params = \
+    np.load('../results/{}/winlen{}/art_data_results.npy'.format(spectrum,
+                                                                 winlen),
+            encoding='latin1')
 concepts = res_spade['patterns']
 pval_spectrum  = res_spade['pvalue_spectrum']
 # SPADE parameters
 spectrum = params['spectrum']
 min_spikes = params['min_spikes']
 n_surr = params['n_surr']
-##### PSF filtering #####
+# PSF filtering
 if len(pval_spectrum) == 0:
     ns_sgnt = []
 else:
@@ -62,7 +75,7 @@ concepts_psf = list(filter(
 print('Winlen:', winlen)
 print('Non significant signatures:', sorted(ns_sgnt))
 print('Number of significant patterns before psr:', len(concepts_psf))
-#### PSR filtering ######
+# PSR filtering
 # Decide whether filter the concepts using psr
 if psr_param is not None:
     # Filter using conditional tests (psr)

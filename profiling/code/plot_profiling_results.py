@@ -17,6 +17,9 @@ and the 3d in green.
 Similarly, the profiling times of the PSF using FP-growth for the 2d
 in light blue and the 3d in red.
 At the bottom, the same results are represented with logarithmic time axis.
+The script reproduces Figure 6 of the publication:
+Stella, A., Quaglio, P., Torre, E., & Grün, S. (2019). 3d-SPADE: Significance
+Evaluation of Spatio-Temporal Patterns of Various Temporal Extents. Biosystems.
 
 """
 from scipy.optimize import curve_fit

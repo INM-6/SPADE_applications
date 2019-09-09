@@ -15,6 +15,7 @@ import numpy as np
 import time
 import os
 import yaml
+from yaml import Loader
 from utils import mkdirp, split_path, estimate_number_spikes
 
 
@@ -116,7 +117,7 @@ if __name__ == '__main__':
     key = args.key
 
     with open("configfile.yaml", 'r') as stream:
-        config = yaml.load(stream)
+        config = yaml.load(stream, Loader=Loader)
 
     winlen = config['winlen']
     binsize = config['binsize'] * pq.ms
