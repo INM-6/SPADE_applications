@@ -5,6 +5,7 @@ import argparse
 from mpi4py import MPI  # for parallelized routines
 import yaml
 from utils import mkdirp, split_path
+from yaml import Loader
 
 if __name__ == '__main__':
     data_file = np.load('../data/art_data.npy', encoding='latin1').item()
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     max_spikes = data_param['xi']
 
     with open("configfile.yaml", 'r') as stream:
-        config = yaml.load(stream)
+        config = yaml.load(stream, Loader=Loader)
     n_surr = config['n_surr']
     binsize = data_param['binsize']
     winlen = args.winlen
@@ -52,7 +53,7 @@ if __name__ == '__main__':
                             spectrum=spectrum,
                             alpha=1,
                             psr_param=None)
-    
+
     # Storing data
     res_path = '../results/{}/winlen{}'.format(spectrum, winlen)
     # Create path if not already existing
